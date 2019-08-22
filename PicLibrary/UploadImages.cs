@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace PicLibrary
 {
     class UploadImages
-    {
+    {//test change
         public ObservableCollection<MyPics> myPics { get; private set; }
         public ObservableCollection<BitmapImage> fullImages { get; private set; }
         public BitmapImage fullImage { get; set; }
