@@ -7,8 +7,92 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <UserControl.Resources>
+        <local:ThumbnailConverter x:Key="thumbnailConverter"></local:ThumbnailConverter>
+    </UserControl.Resources>
+    <Grid Background="Cornsilk">
+        <RelativePanel RenderTransformOrigin="0.201,0.341">
+            <StackPanel x:Name="titlePanel" Margin="20,20,0,20" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="260" Width="1400">
+                <TextBlock x:Name="title" Text="Picture Library" FontWeight="ExtraBold" TextAlignment="Center" Margin="550,20,0,200" FontSize="30" />
+                <TextBox x:Name="searchPhoto" PlaceholderText="search photos" Height="40" Width="150" Margin="200,20,0,200" TextAlignment="Left"/>
+                <Button x:Name="searchPhotos" Height="30" Width="40" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,20,0,200">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox MaxHeight="20" MaxWidth="20">
+                            <SymbolIcon Symbol="Find"/>
+                        </Viewbox>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
 
-    <Grid>
+            <StackPanel x:Name="menuPanel" Margin="20" Orientation="Vertical">
+                <Button x:Name="UploadPhoto" Click="UploadPhoto_Click" Height="56" Width="152" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,200,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox MaxHeight="40" MaxWidth="40">
+                            <SymbolIcon Symbol="Add"/>
+                        </Viewbox>
+                        <TextBlock Text="Upload" FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="22,0,0,0" Width="93"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="albums" Click="Albums_Click" Height="56" Width="152" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,100,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox MaxHeight="40" MaxWidth="40">
+                            <SymbolIcon Symbol="Folder"/>
+                        </Viewbox>
+                        <TextBlock Text="Add Albums" FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="22,0,0,0" Width="93"/>
+                    </StackPanel>
+                </Button>
+                <ListView x:Name="albumsListView" ItemsSource="{Binding}" HorizontalAlignment="Left" Margin="50,10,0,0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate >
+                            <Button Content="{Binding}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Button Name="PhotoButton"  Height="56" Width="152" VerticalAlignment="Center" HorizontalAlignment="Right" BorderBrush="{x:Null}" Margin="20,10,0,0" Click="PhotoButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox MaxHeight="40" MaxWidth="40">
+                            <SymbolIcon  Symbol="Camera"/>
+                        </Viewbox>
+                        <TextBlock  Text="Camera"  FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="22,0,0,0" Width="93" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <ContentDialog x:Name="mycontentDialoge" VerticalAlignment="Stretch"  PrimaryButtonText="Browse" PrimaryButtonClick="MycontentDialoge_PrimaryButtonClick" RelativePanel.Below="menuPanel">
+                <StackPanel x:Name="upload" Margin="20" Orientation="Horizontal">
+                    <TextBox x:Name="ImagePath" HorizontalAlignment="Left" PlaceholderText="Image Path" Margin="20" Width="200" />
+                </StackPanel>
+            </ContentDialog>
+            <ContentDialog x:Name="albumContentDialoge" VerticalAlignment="Stretch" RelativePanel.Below="mycontentDialoge" PrimaryButtonText="Add" PrimaryButtonClick="AlbumContentDialoge_PrimaryButtonClick">
+                <StackPanel x:Name="add" Margin="20" Orientation="Horizontal">
+                    <TextBox x:Name="albumName" HorizontalAlignment="Left" PlaceholderText="enter album name" Margin="20" Width="200"/>
+                </StackPanel>
+            </ContentDialog>
+            <ContentDialog x:Name="imageFlipView" RelativePanel.Above="albumContentDialoge" PrimaryButtonText="Go Back" PrimaryButtonClick="ImageFlipView_PrimaryButtonClick">
+                <FlipView x:Name="flipImage" ItemsSource="{Binding}">
+                    <FlipView.ItemTemplate>
+                        <DataTemplate x:DataType="BitmapImage">
+                            <Image Source="{x:Bind}" Stretch="Fill"/>
+
+                        </DataTemplate>
+                    </FlipView.ItemTemplate>
+                </FlipView>
+            </ContentDialog>
+            <GridView x:Name="gridView" ItemsSource="{x:Bind Path=uploadImages.myPics}" RelativePanel.RightOf="menuPanel" RelativePanel.Below="titlePanel" Margin="0,0,0,0" ItemClick="GvPhotoLibrary_ItemClick" IsItemClickEnabled="True" IsMultiSelectCheckBoxEnabled="True">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="local:MainPage">
+                        <StackPanel Margin="10">
+                            <Image Source="{Binding Thumbnail, Converter={StaticResource thumbnailConverter}}" Width="150" Height="150" Stretch="Fill"/>
+                            <TextBlock Text="{Binding FileName}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+        </RelativePanel>
 
     </Grid>
 </Page>
